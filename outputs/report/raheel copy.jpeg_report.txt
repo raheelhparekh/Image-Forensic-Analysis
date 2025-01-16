@@ -1,0 +1,13 @@
+Image Analysis Report for images/raheel copy.jpeg
+==================================================
+Metadata:
+{}
+
+Feature Extraction:
+Histogram Shape: (16, 16, 16)
+Edge Map Shape: (1280, 1280)
+ORB Descriptors Shape: (500, 32)
+
+ELA Image Path: outputs/ela/raheel copy.jpeg_ela.jpg
+
+Anomaly Detected: Yes
