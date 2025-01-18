@@ -4,6 +4,8 @@ import cv2
 import numpy as np
 from PIL import Image, ImageChops
 import exifread
+import io
+import hashlib
 
 # Create necessary directories
 os.makedirs("outputs/metadata", exist_ok=True)
@@ -68,6 +70,43 @@ def detect_anomaly(ela_image_path, threshold=50):
         return True  # Anomaly detected
     return False  # No anomaly detected
 
+def image_to_binary_stream(image_path):
+    """Convert an image to a binary stream."""
+    with open(image_path, "rb") as file:
+        binary_stream = io.BytesIO(file.read())
+    return binary_stream
+
+def hash_binary_stream(binary_stream):
+    """Generate a hash of the binary stream."""
+    binary_stream.seek(0)  # Reset the stream's position
+    return hashlib.sha256(binary_stream.read()).hexdigest()
+
+def compare_binary_streams(original_path, modified_path):
+    """Compare the binary streams of two images and visualize differences."""
+    original_stream = image_to_binary_stream(original_path)
+    modified_stream = image_to_binary_stream(modified_path)
+
+    # Generate hashes for quick comparison
+    original_hash = hash_binary_stream(original_stream)
+    modified_hash = hash_binary_stream(modified_stream)
+
+    print(f"Original Hash: {original_hash}")
+    print(f"Modified Hash: {modified_hash}")
+
+    if original_hash == modified_hash:
+        print("The images are identical at the binary level.")
+        return None  # No differences
+    
+    print("The images are different. Visualizing pixel differences...")
+    original_image = Image.open(original_path)
+    modified_image = Image.open(modified_path)
+    diff_image = ImageChops.difference(original_image, modified_image)
+
+    diff_image_path = "outputs/difference_image.png"
+    diff_image.save(diff_image_path)
+    print(f"Differences saved at {diff_image_path}")
+    return diff_image_path
+
 def generate_report(image_path, metadata, hist, edges, ela_path, is_anomalous, features=None):
     """Generate a report consolidating analysis results."""
     report_path = os.path.join("outputs/report", os.path.basename(image_path) + "_report.txt")
@@ -85,7 +124,7 @@ def generate_report(image_path, metadata, hist, edges, ela_path, is_anomalous, f
         f.write(f"\nAnomaly Detected: {'Yes' if is_anomalous else 'No'}\n")
     print(f"Report generated at: {report_path}")
 
-def main(image_path):
+def main(image_path, modified_image_path=None):
     # Step 1: Metadata Analysis
     print(f"Processing metadata for {image_path}")
     metadata = extract_metadata(image_path)
@@ -102,10 +141,16 @@ def main(image_path):
     print(f"Detecting anomalies for {image_path}")
     is_anomalous = detect_anomaly(ela_path)
     
-    # Step 5: Generate Report
+    # Step 5: Compare Binary Streams (if modified image provided)
+    if modified_image_path:
+        print(f"Comparing binary streams between {image_path} and {modified_image_path}")
+        compare_binary_streams(image_path, modified_image_path)
+    
+    # Step 6: Generate Report
     print(f"Generating report for {image_path}")
     generate_report(image_path, metadata, hist, edges, ela_path, is_anomalous, descriptors)
 
 if __name__ == "__main__":
-    image_path = "images/raheel copy.jpeg"  # Replace with the path to your image
-    main(image_path)
+    image_path = "images/image.jpeg"  # Replace with the path to your image
+    modified_image_path = "images/image.jpeg"  # Replace with the path to the modified image (if available)
+    main(image_path, modified_image_path)
