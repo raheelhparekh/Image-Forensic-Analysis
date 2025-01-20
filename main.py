@@ -2,7 +2,7 @@ import os
 import json
 import cv2
 import numpy as np
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 import exifread
 import io
 import hashlib
@@ -107,7 +107,7 @@ def compare_binary_streams(original_path, modified_path):
     print(f"Differences saved at {diff_image_path}")
     return diff_image_path
 
-def generate_report(image_path, metadata, hist, edges, ela_path, is_anomalous, features=None):
+def generate_report(image_path, metadata, hist, edges, ela_path, is_anomalous, features=None, modified_image_path=None, diff_image_path=None):
     """Generate a report consolidating analysis results."""
     report_path = os.path.join("outputs/report", os.path.basename(image_path) + "_report.txt")
     
@@ -121,10 +121,33 @@ def generate_report(image_path, metadata, hist, edges, ela_path, is_anomalous, f
         f.write(f"Edge Map Shape: {edges.shape}\n")
         f.write(f"ORB Descriptors Shape: {features.shape if features is not None else 'N/A'}\n")
         f.write(f"\nELA Image Path: {ela_path}\n")
-        f.write(f"\nAnomaly Detected: {'Yes' if is_anomalous else 'No'}\n")
+        f.write(f"Anomaly Detected: {'Yes' if is_anomalous else 'No'}\n")
+
+        if modified_image_path and diff_image_path:
+            f.write(f"\nModified Image Path: {modified_image_path}\n")
+            f.write(f"Differences Image Path: {diff_image_path}\n")
     print(f"Report generated at: {report_path}")
 
-def main(image_path, modified_image_path=None):
+def tamper_image(image_path, output_path, text="Tampered"):
+    """Create a tampered version of the image by adding a watermark."""
+    original = Image.open(image_path).convert("RGB")
+    draw = ImageDraw.Draw(original)
+
+    # Add text watermark
+    font = ImageFont.load_default()
+    text_position = (10, 10)  # Top-left corner
+    draw.text(text_position, text, fill="red", font=font)
+
+    # Save tampered image
+    original.save(output_path)
+    print(f"Tampered image saved at: {output_path}")
+
+def main(image_path, modified_image_path=None, auto_tamper=False):
+    # Automatically tamper image if requested
+    if auto_tamper and not modified_image_path:
+        modified_image_path = os.path.join("images", "tampered_image.jpg")
+        tamper_image(image_path, modified_image_path)
+
     # Step 1: Metadata Analysis
     print(f"Processing metadata for {image_path}")
     metadata = extract_metadata(image_path)
@@ -142,15 +165,17 @@ def main(image_path, modified_image_path=None):
     is_anomalous = detect_anomaly(ela_path)
     
     # Step 5: Compare Binary Streams (if modified image provided)
+    diff_image_path = None
     if modified_image_path:
         print(f"Comparing binary streams between {image_path} and {modified_image_path}")
-        compare_binary_streams(image_path, modified_image_path)
+        diff_image_path = compare_binary_streams(image_path, modified_image_path)
     
     # Step 6: Generate Report
     print(f"Generating report for {image_path}")
-    generate_report(image_path, metadata, hist, edges, ela_path, is_anomalous, descriptors)
+    generate_report(image_path, metadata, hist, edges, ela_path, is_anomalous, descriptors, modified_image_path, diff_image_path)
 
 if __name__ == "__main__":
-    image_path = "images/image.jpeg"  # Replace with the path to your image
-    modified_image_path = "images/image.jpeg"  # Replace with the path to the modified image (if available)
-    main(image_path, modified_image_path)
+    image_path = "images/cup_image.jpg"  # Replace with the path to your image
+    auto_tamper = True  # Set to True to automatically generate a tampered image
+    modified_image_path = None  # Optionally specify a tampered image path
+    main(image_path, modified_image_path, auto_tamper)
