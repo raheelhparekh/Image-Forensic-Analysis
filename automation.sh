@@ -1,102 +1,60 @@
 #!/bin/bash
 
-# Automation Script for Image Tampering Detection
-# Author: Your Name
+# Title: Image Analysis Automation Script
+# Author: Automation Script
+# Description: Automates running the Python script for image analysis without deleting the `outputs` directory.
 
-# Directory and file paths
-PROJECT_DIR=$(pwd)
-PYTHON_SCRIPT="$PROJECT_DIR/main.py"
-IMAGE1="images/image.jpeg"       # First image path
-IMAGE2="images/image2.jpeg"      # Second image path
-OUTPUT_DIR="$PROJECT_DIR/outputs"
+# Exit on error
+set -e
 
-# Step 1: Install Dependencies
-install_dependencies() {
-    echo "Checking and installing dependencies..."
-    
-    # Ensure Python and pip are installed
-    if ! command -v python3 &> /dev/null; then
-        echo "Python3 not found. Installing Python3..."
-        sudo apt update
-        sudo apt install python3 -y
+# Paths
+PYTHON_SCRIPT="image_analysis.py"  # Replace with the actual Python script filename
+ORIGINAL_IMAGE="images/cup_image.jpg"
+MODIFIED_IMAGE="images/tampered_image.jpg"
+OUTPUT_DIR="outputs"
+
+# Step 1: Check and Install Dependencies
+echo "Checking and installing required Python dependencies..."
+if ! command -v python3 &>/dev/null; then
+    echo "Python3 is not installed. Please install Python3 to proceed."
+    exit 1
+fi
+
+if ! command -v pip3 &>/dev/null; then
+    echo "pip3 is not installed. Installing pip3..."
+    sudo apt-get install -y python3-pip
+fi
+
+# Install required Python packages
+pip3 install -r requirements.txt --quiet
+
+# Step 2: Create Output Directories (if not already existing)
+echo "Ensuring required output directories exist..."
+mkdir -p "$OUTPUT_DIR/metadata"
+mkdir -p "$OUTPUT_DIR/features"
+mkdir -p "$OUTPUT_DIR/ela"
+mkdir -p "$OUTPUT_DIR/report"
+
+# Step 3: Run the Python Script
+echo "Running the Python script for image analysis..."
+if [[ -f "$PYTHON_SCRIPT" ]]; then
+    if [[ -f "$ORIGINAL_IMAGE" ]]; then
+        if [[ -f "$MODIFIED_IMAGE" ]]; then
+            python3 "$PYTHON_SCRIPT" "$ORIGINAL_IMAGE" "$MODIFIED_IMAGE"
+        else
+            echo "Modified image not found at $MODIFIED_IMAGE. Running for the original image only."
+            python3 "$PYTHON_SCRIPT" "$ORIGINAL_IMAGE"
+        fi
+    else
+        echo "Original image not found at $ORIGINAL_IMAGE. Please provide a valid image path."
+        exit 1
     fi
+else
+    echo "Python script $PYTHON_SCRIPT not found. Please ensure it exists in the current directory."
+    exit 1
+fi
 
-    if ! command -v pip3 &> /dev/null; then
-        echo "pip3 not found. Installing pip3..."
-        sudo apt install python3-pip -y
-    fi
+echo "Image analysis completed successfully. Outputs are saved in the '$OUTPUT_DIR' directory."
 
-    # Install required Python libraries
-    echo "Installing required Python packages..."
-    pip3 install -r requirements.txt
-    echo "Dependencies installed successfully."
-}
-
-# Step 2: Run Python Script
-run_script() {
-    echo "Running the Python script..."
-    python3 "$PYTHON_SCRIPT" "$IMAGE1" "$IMAGE2"
-    echo "Script execution completed."
-}
-
-# Step 3: Display Results
-display_results() {
-    echo "Displaying outputs..."
-    
-    # Display metadata files
-    echo "Metadata extracted:"
-    ls "$OUTPUT_DIR/metadata"
-
-    # Display reports
-    echo "Generated reports:"
-    ls "$OUTPUT_DIR/report"
-
-    echo "Outputs saved in: $OUTPUT_DIR"
-}
-
-# Step 4: Cleanup Outputs (Optional)
-cleanup_outputs() {
-    echo "Cleaning up outputs..."
-    rm -rf "$OUTPUT_DIR"
-    echo "Outputs removed."
-}
-
-# Menu to guide user
-main_menu() {
-    echo "======================================"
-    echo " Image Tampering Detection Automation "
-    echo "======================================"
-    echo "1. Install Dependencies"
-    echo "2. Run Analysis Script"
-    echo "3. View Results"
-    echo "4. Cleanup Outputs"
-    echo "5. Exit"
-    echo "======================================"
-    read -p "Choose an option [1-5]: " choice
-
-    case $choice in
-        1)
-            install_dependencies
-            ;;
-        2)
-            run_script
-            ;;
-        3)
-            display_results
-            ;;
-        4)
-            cleanup_outputs
-            ;;
-        5)
-            echo "Exiting script. Goodbye!"
-            exit 0
-            ;;
-        *)
-            echo "Invalid option. Please try again."
-            main_menu
-            ;;
-    esac
-}
-
-# Run the menu
-main_menu
+# Step 4: Preserve Output Directory (Do not delete outputs)
+echo "Outputs directory is preserved for future analysis."
