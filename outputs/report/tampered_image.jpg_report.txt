@@ -1,0 +1,25 @@
+Image Analysis Report for images/tampered_image.jpg
+============================================================
+
+**Metadata:**
+No metadata found.
+
+
+**Feature Extraction:**
+- Histogram Shape: (4096,)
+- Edge Map Shape: (820, 1220)
+- ORB Descriptors: Available
+
+
+**Error Level Analysis (ELA):**
+- ELA Image Path: outputs/ela/tampered_image.jpg_ela.jpg
+
+
+**Hash Verification:**
+- SHA-256 Hash: bd8e50cd9dc815d13407ec648e8b36ba615209bacbc68b9b793f7f5e61256529
+- Perceptual Hash (phash): 9e7432a5b0e1ad3cec8eac394659adcccad55713a18a9d8be1c943eaa5624b33
+
+
+**Additional Information:**
+- Metadata Comparison: Original has metadata; Modified lacks metadata.
+
