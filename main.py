@@ -44,6 +44,18 @@ def extract_metadata(image_path, output_dir):
     except Exception as e:
         return {}
 
+def compute_hashes(image_path):
+    try:
+        with open(image_path, "rb") as file:
+            sha256_hash = hashlib.sha256(file.read()).hexdigest()
+        
+        image = Image.open(image_path)
+        phash = str(imagehash.phash(image))
+        
+        return {"sha256": sha256_hash, "phash": phash}
+    except Exception as e:
+        return {"sha256": None, "phash": None}
+
 def extract_features(image_path, output_dir):
     try:
         image = cv2.imread(image_path)
@@ -116,6 +128,7 @@ def main(original_image_path, user_id, website_url, tool_name="ImageAnalysisTool
     run_output_dir, final_output_path_json, final_output_path_csv = create_output_directories(tool_name, user_id, website_url)
 
     metadata_original = extract_metadata(original_image_path, run_output_dir)
+    hashes = compute_hashes(original_image_path)
     hist_summary, edge_summary, descriptors_summary = extract_features(original_image_path, run_output_dir)
     ela_path = error_level_analysis(original_image_path, run_output_dir)
 
@@ -123,6 +136,7 @@ def main(original_image_path, user_id, website_url, tool_name="ImageAnalysisTool
         "original_image": {
             "path": original_image_path,
             "metadata": metadata_original,
+            "hashes": hashes,
             "features": {
                 "histogram_summary": hist_summary,
                 "edge_summary": edge_summary,
