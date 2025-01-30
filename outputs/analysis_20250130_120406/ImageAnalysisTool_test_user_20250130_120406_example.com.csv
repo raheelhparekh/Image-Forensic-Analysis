@@ -1,0 +1,6 @@
+Key,Value
+original_image.path,images/tampered_image.jpg
+original_image.metadata,{}
+original_image.hashes,"{'sha256': 'bd8e50cd9dc815d13407ec648e8b36ba615209bacbc68b9b793f7f5e61256529', 'phash': '9e32b0adecac46a5'}"
+original_image.features,"{'histogram_summary': {'mean': 0.006617872044444084, 'std': 0.04369587078690529, 'max': 0.7682451009750366}, 'edge_summary': {'mean': 33.94053149663809, 'std': 75.71008875202084, 'max': 1030.1271766146158}, 'descriptors_summary': {'mean': 137.2865625, 'std': 73.78333276854329, 'max': 255.0}}"
+original_image.ela_path,outputs/analysis_20250130_120406/tampered_image.jpg_ela.jpg

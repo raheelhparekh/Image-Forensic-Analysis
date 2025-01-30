@@ -1,0 +1,60 @@
+{
+    "original_image": {
+        "path": "images/Nikon_D70.jpg",
+        "metadata": {
+            "Image Make": "NIKON CORPORATION",
+            "Image Model": "NIKON D70",
+            "Image Orientation": "Horizontal (normal)",
+            "Image XResolution": "240",
+            "Image YResolution": "240",
+            "Image ResolutionUnit": "Pixels/Inch",
+            "Image Software": "GIMP 2.4.5",
+            "Image DateTime": "2008:07:31 10:03:44",
+            "Image ExifOffset": "198",
+            "Thumbnail Compression": "JPEG (old-style)",
+            "Thumbnail XResolution": "72",
+            "Thumbnail YResolution": "72",
+            "Thumbnail ResolutionUnit": "Pixels/Inch",
+            "Thumbnail JPEGInterchangeFormat": "566",
+            "Thumbnail JPEGInterchangeFormatLength": "1700",
+            "EXIF ExposureTime": "1/200",
+            "EXIF FNumber": "9",
+            "EXIF ExposureProgram": "Manual",
+            "EXIF ISOSpeedRatings": "200",
+            "EXIF DateTimeOriginal": "2008:03:15 09:52:01",
+            "EXIF ShutterSpeedValue": "477741/62500",
+            "EXIF ApertureValue": "126797/20000",
+            "EXIF ExposureBiasValue": "-1",
+            "EXIF MaxApertureValue": "33/10",
+            "EXIF MeteringMode": "CenterWeightedAverage",
+            "EXIF Flash": "Flash did not fire",
+            "EXIF FocalLength": "100",
+            "EXIF ColorSpace": "sRGB",
+            "EXIF ExifImageWidth": "100",
+            "EXIF ExifImageLength": "66",
+            "EXIF FocalLengthIn35mmFilm": "150"
+        },
+        "hashes": {
+            "sha256": "8e2a627b96ca71c20129161f46bda3d338407da99bd11b1055adb27af27d7ef5",
+            "phash": "ff7cc46d8004ed1a"
+        },
+        "features": {
+            "histogram_summary": {
+                "mean": 0.007351115345954895,
+                "std": 0.043578505516052246,
+                "max": 0.6797599196434021
+            },
+            "edge_summary": {
+                "mean": 150.13791691608816,
+                "std": 133.70873306570965,
+                "max": 836.9181560941308
+            },
+            "descriptors_summary": {
+                "mean": 135.30208333333334,
+                "std": 71.45717245777168,
+                "max": 254.0
+            }
+        },
+        "ela_path": "outputs/analysis_20250130_120536/Nikon_D70.jpg_ela.jpg"
+    }
+}
