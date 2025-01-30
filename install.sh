@@ -1,50 +1,27 @@
 #!/bin/bash
 
-# INSTALL.SH
-# Script to set up the environment for the image analysis and tampering detection project
+# Exit on error
+set -e
 
-echo "Starting the setup process..."
+echo "🔄 Installing dependencies for image forensics..."
 
-# Check if Python is installed
-if ! command -v python3 &> /dev/null
-then
-    echo "Python3 is not installed. Please install Python 3.8 or above."
-    exit 1
+# Install Python3 if missing
+if ! command -v python3 &>/dev/null; then
+    echo "⚠️ Python3 is not installed. Installing..."
+    sudo apt-get update && sudo apt-get install -y python3 python3-pip
 fi
 
-echo "Python3 is installed. Proceeding with setup..."
+# Ensure pip is up-to-date
+pip3 install --upgrade pip setuptools wheel
 
-# Create and activate a virtual environment
-if [ ! -d "venv" ]; then
-    echo "Creating a virtual environment..."
-    python3 -m venv venv
-    echo "Virtual environment created."
-else
-    echo "Virtual environment already exists. Skipping creation."
-fi
+# Install required Python libraries
+pip3 install -r requirements.txt --quiet
 
-echo "Activating virtual environment..."
-source venv/bin/activate || source venv/Scripts/activate
-echo "Virtual environment activated."
+# Create output directories if they don't exist
+echo "📂 Ensuring output directories exist..."
+mkdir -p "outputs/metadata"
+mkdir -p "outputs/features"
+mkdir -p "outputs/ela"
+mkdir -p "outputs/report"
 
-# Upgrade pip
-echo "Upgrading pip..."
-pip install --upgrade pip
-
-# Install required libraries
-echo "Installing required libraries..."
-pip install exifread opencv-python-headless pillow imagehash numpy
-
-# Create necessary output directories
-OUTPUT_DIRS=("outputs/metadata" "outputs/features" "outputs/ela" "outputs/report")
-for dir in "${OUTPUT_DIRS[@]}"
-do
-    if [ ! -d "$dir" ]; then
-        echo "Creating directory: $dir"
-        mkdir -p "$dir"
-    else
-        echo "Directory $dir already exists. Skipping creation."
-    fi
-done
-
-echo "Setup completed successfully. You can now run the script using 'python main.py'."
+echo "✅ Installation complete!"
