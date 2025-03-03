@@ -1,0 +1,91 @@
+{
+    "original_image": {
+        "path": "images/og.jpg",
+        "metadata": {},
+        "hashes": {
+            "sha256": "18301203debbe0f3e8438a0425607ff18652aec1c7cb00420b7d4d9ad9358202",
+            "phash": "85fb03cd2a293f83"
+        },
+        "features": {
+            "histogram_summary": {
+                "mean": 0.009425045922398567,
+                "std": 0.043177466839551926,
+                "max": 0.47334009408950806
+            },
+            "edge_summary": {
+                "mean": 102.89577613936582,
+                "std": 134.2200572642679,
+                "max": 1025.3399436284535
+            },
+            "descriptors_summary": {
+                "mean": 134.7420625,
+                "std": 74.1967875365645,
+                "max": 255.0
+            }
+        },
+        "ela_path": "outputs/analysis_20250303_130023/og.jpg_ela.jpg"
+    },
+    "tampered_image": {
+        "path": "images/og.jpg",
+        "metadata": {},
+        "hashes": {
+            "sha256": "18301203debbe0f3e8438a0425607ff18652aec1c7cb00420b7d4d9ad9358202",
+            "phash": "85fb03cd2a293f83"
+        },
+        "features": {
+            "histogram_summary": {
+                "mean": 0.009425045922398567,
+                "std": 0.043177466839551926,
+                "max": 0.47334009408950806
+            },
+            "edge_summary": {
+                "mean": 102.89577613936582,
+                "std": 134.2200572642679,
+                "max": 1025.3399436284535
+            },
+            "descriptors_summary": {
+                "mean": 134.7420625,
+                "std": 74.1967875365645,
+                "max": 255.0
+            }
+        },
+        "ela_path": "outputs/analysis_20250303_130023/og.jpg_ela.jpg"
+    },
+    "comparison_results": {
+        "metadata_differences": {},
+        "hash_differences": {},
+        "feature_differences": {
+            "histogram": {},
+            "edges": {},
+            "descriptors": {}
+        },
+        "ela_differences": null,
+        "ssim": {
+            "index": 1.0,
+            "diff_path": "outputs/analysis_20250303_130023/ssim_diff.jpg"
+        },
+        "pixel_differences": {
+            "diff_path": "outputs/analysis_20250303_130023/pixel_diff.jpg"
+        },
+        "summary": {
+            "ssim_interpretation": {
+                "description": "Structural Similarity Index (SSIM) measures how similar two images are. A value of 1 means the images are identical, while a value closer to 0 means they are very different.",
+                "value": 1.0,
+                "interpretation": "The SSIM value of 1.00 indicates high similarity between the original and tampered images."
+            },
+            "pixel_differences_interpretation": {
+                "description": "Pixel-wise difference shows the absolute difference between the two images. Bright areas in the difference image indicate regions where the images differ significantly.",
+                "interpretation": "Check the 'pixel_diff.jpg' image to see where the original and tampered images differ. Bright areas indicate tampering or changes."
+            },
+            "ela_interpretation": {
+                "description": "Error Level Analysis (ELA) highlights areas of an image that have been compressed differently. These areas may indicate tampering.",
+                "interpretation": "Check the 'original_ela.jpg' and 'tampered_ela.jpg' images. Bright areas in the ELA images suggest regions that may have been altered."
+            },
+            "conclusion": {
+                "description": "Based on the analysis, the tampered image shows differences in the following areas:",
+                "differences": [],
+                "final_verdict": "The image appears to be identical to the original."
+            }
+        }
+    }
+}
