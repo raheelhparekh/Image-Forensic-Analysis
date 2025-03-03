@@ -1,0 +1,12 @@
+# Ignore image files
+*.jpg
+*.jpeg
+*.png
+
+# Ignore NumPy compressed files
+*.npz
+
+*_metadata.json
+*json
+
+*.csv

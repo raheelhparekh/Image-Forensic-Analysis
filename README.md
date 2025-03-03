@@ -23,7 +23,7 @@ This project is designed to analyze images for evidence tampering and generate d
     cd <repository-directory>
     ```
 
-2. Make the [install.sh](http://_vscodecontentref_/1) script executable and run it to set up the environment:
+2. Make the `install.sh` script executable and run it to set up the environment:
     ```sh
     chmod +x install.sh
     ./install.sh
@@ -33,24 +33,24 @@ This project is designed to analyze images for evidence tampering and generate d
 
 ### Running the Analysis
 
-1. Make the [run_analysis.sh](http://_vscodecontentref_/2) script executable:
+1. Make the `run_analysis.sh` script executable:
     ```sh
     chmod +x run_analysis.sh
     ```
 
 2. Run the script with the required parameters:
     ```sh
-    ./run_analysis.sh <path-to-image> <user-id> <website-url>
+    ./run_analysis.sh <path-to-original-image> <path-to-tampered-image> <user-id> <website-url>
     ```
 
     Example:
     ```sh
-    ./run_analysis.sh images/sample.jpg test_user example.com
+    ./run_analysis.sh images/sample_original.jpg images/sample_tampered.jpg test_user example.com
     ```
 
 ### Running the Automation Script
 
-1. Make the [automation.sh](http://_vscodecontentref_/3) script executable:
+1. Make the `automation.sh` script executable:
     ```sh
     chmod +x automation.sh
     ```
@@ -62,7 +62,8 @@ This project is designed to analyze images for evidence tampering and generate d
 
 ### Uninstallation
 
-To clean up the environment, run the [uninstall.sh](http://_vscodecontentref_/4) script:
+To clean up the environment, run the `uninstall.sh` script:
 ```sh
 chmod +x uninstall.sh
 ./uninstall.sh
+```

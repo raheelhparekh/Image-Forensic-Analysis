@@ -2,10 +2,11 @@
 
 # Ask the user for inputs
 read -p "Enter the path to the original image: " original_image_path
-# read -p "Enter the user ID: " user_id
-# read -p "Enter the website URL: " website_url
+read -p "Enter the path to the tampered image: " tampered_image_path
+read -p "Enter the user ID: " user_id
+read -p "Enter the website URL: " website_url
 
 # Run the Python script with the provided inputs
-python3 main.py --original "$original_image_path" --user "$user_id" --website "$website_url"
+python3 main.py --original "$original_image_path" --tampered "$tampered_image_path" --user "$user_id" --website "$website_url"
 
 echo "✅ Analysis complete! Check the 'outputs' directory for results."

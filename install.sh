@@ -33,7 +33,7 @@ pip install --upgrade pip
 
 # Install required libraries
 echo "Installing required libraries..."
-pip install exifread opencv-python-headless pillow imagehash numpy
+pip install -r requirements.txt
 
 # Create necessary output directories
 OUTPUT_DIRS=("outputs/metadata" "outputs/features" "outputs/ela" "outputs/report")
