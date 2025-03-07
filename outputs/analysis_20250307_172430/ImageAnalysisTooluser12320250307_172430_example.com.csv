@@ -1,0 +1,15 @@
+Key,Value
+original_image.path,images/og.jpg
+tampered_image.path,images/og.jpg
+comparison_results.metadata_differences,{}
+comparison_results.hash_differences,{}
+comparison_results.feature_differences,"{'histogram': {}, 'edges': {}, 'descriptors': {}}"
+comparison_results.ela_differences,
+comparison_results.ssim,"{'index': np.float64(1.0), 'diff_path': 'outputs/analysis_20250307_172430/ssim_diff.jpg'}"
+comparison_results.pixel_differences,{'diff_path': 'outputs/analysis_20250307_172430/pixel_diff.jpg'}
+comparison_results.summary,"{'ssim_interpretation': {'description': 'Structural Similarity Index (SSIM) measures how similar two images are. A value of 1 means the images are identical, while a value closer to 0 means they are very different.', 'value': np.float64(1.0), 'interpretation': 'The SSIM value of 1.00 indicates high similarity between the original and tampered images.'}, 'pixel_differences_interpretation': {'description': 'Pixel-wise difference shows the absolute difference between the two images. Bright areas in the difference image indicate regions where the images differ significantly.', 'interpretation': ""Check the 'pixel_diff.jpg' image to see where the original and tampered images differ. Bright areas indicate tampering or changes.""}, 'ela_interpretation': {'description': 'Error Level Analysis (ELA) highlights areas of an image that have been compressed differently. These areas may indicate tampering.', 'interpretation': ""Check the 'original_ela.jpg' and 'tampered_ela.jpg' images. Bright areas in the ELA images suggest regions that may have been altered.""}, 'heatmap': {'description': 'The heatmap visually represents tampered areas. Bright red and yellow indicate heavy modifications, while blue/green indicate minimal changes.'}, 'comparison_image': {'description': 'The comparison image places the original, tampered, and highlighted versions side by side to easily spot alterations.'}, 'tampering_percentage': {'description': 'This value represents the percentage of the image that has been altered. A higher percentage means more modifications were detected.'}, 'conclusion': {'description': 'Based on the analysis, the tampered image shows differences in the following areas:', 'differences': [], 'final_verdict': 'The image appears to be identical to the original.'}}"
+tampered_highlight.highlighted_image_path,outputs/analysis_20250307_172430/tampered_highlight.jpg
+tampered_highlight.heatmap_path,outputs/analysis_20250307_172430/heatmap.jpg
+tampered_highlight.comparison_image_path,outputs/analysis_20250307_172430/comparison.jpg
+tampered_highlight.pixel_difference_count,0
+tampered_highlight.tampering_percentage,0.0

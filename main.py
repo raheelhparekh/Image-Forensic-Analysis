@@ -24,8 +24,8 @@ def create_output_directories(tool_name, user_id, website_url):
     parsed_url = urlparse(website_url)
     domain = parsed_url.netloc or parsed_url.path
 
-    final_filename_json = f"{tool_name}_{user_id}_{timestamp}_{domain}.json"
-    final_filename_csv = f"{tool_name}_{user_id}_{timestamp}_{domain}.csv"
+    final_filename_json = f"{tool_name}{user_id}{timestamp}_{domain}.json"
+    final_filename_csv = f"{tool_name}{user_id}{timestamp}_{domain}.csv"
     final_output_path_json = os.path.join(run_output_dir, final_filename_json)
     final_output_path_csv = os.path.join(run_output_dir, final_filename_csv)
 
@@ -245,6 +245,15 @@ def compare_images(original_image_path, tampered_image_path, output_dir):
             "description": "Error Level Analysis (ELA) highlights areas of an image that have been compressed differently. These areas may indicate tampering.",
             "interpretation": "Check the 'original_ela.jpg' and 'tampered_ela.jpg' images. Bright areas in the ELA images suggest regions that may have been altered.",
         },
+        "heatmap": {
+            "description": "The heatmap visually represents tampered areas. Bright red and yellow indicate heavy modifications, while blue/green indicate minimal changes.",
+        },
+        "comparison_image": {
+            "description": "The comparison image places the original, tampered, and highlighted versions side by side to easily spot alterations.",
+        },
+        "tampering_percentage": {
+            "description": "This value represents the percentage of the image that has been altered. A higher percentage means more modifications were detected.",
+        },
         "conclusion": {
             "description": "Based on the analysis, the tampered image shows differences in the following areas:",
             "differences": [
@@ -313,6 +322,115 @@ def save_summary_as_csv(summary, csv_path):
         print(f" Error writing final summary CSV: {e}")
 
 
+def divide_image_into_grid(image, grid_size=(4, 4)):
+    """Divides an image into a grid of smaller sections."""
+    h, w = image.shape[:2]
+    grid_h, grid_w = grid_size
+    cell_h, cell_w = h // grid_h, w // grid_w
+
+    grid_cells = []
+    for i in range(grid_h):
+        for j in range(grid_w):
+            x_start, x_end = j * cell_w, (j + 1) * cell_w
+            y_start, y_end = i * cell_h, (i + 1) * cell_h
+            cell = image[y_start:y_end, x_start:x_end]
+            grid_cells.append(((x_start, y_start), cell))
+
+    return grid_cells, (cell_w, cell_h)
+
+
+def generate_heatmap(diff_image, output_path):
+    """Generates a heatmap overlay highlighting tampered areas."""
+    heatmap = cv2.applyColorMap(diff_image, cv2.COLORMAP_JET)
+    cv2.imwrite(output_path, heatmap)
+    return output_path
+
+
+def create_side_by_side_comparison(
+    original_image_path, tampered_image_path, highlight_image_path, output_path
+):
+    """Creates a side-by-side comparison of the original, tampered, and highlighted images."""
+    original = cv2.imread(original_image_path)
+    tampered = cv2.imread(tampered_image_path)
+    highlight = cv2.imread(highlight_image_path)
+
+    if original.shape != tampered.shape:
+        tampered = cv2.resize(tampered, (original.shape[1], original.shape[0]))
+    if highlight.shape != original.shape:
+        highlight = cv2.resize(highlight, (original.shape[1], original.shape[0]))
+
+    comparison_image = np.hstack([original, tampered, highlight])
+    cv2.imwrite(output_path, comparison_image)
+    return output_path
+
+
+def highlight_tampered_areas(
+    original_image_path, tampered_image_path, output_dir, grid_size=(4, 4)
+):
+    """Highlights areas where tampering is detected based on grid division."""
+    original_image = cv2.imread(original_image_path)
+    tampered_image = cv2.imread(tampered_image_path)
+
+    if original_image.shape != tampered_image.shape:
+        tampered_image = cv2.resize(
+            tampered_image, (original_image.shape[1], original_image.shape[0])
+        )
+
+    original_gray = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+    tampered_gray = cv2.cvtColor(tampered_image, cv2.COLOR_BGR2GRAY)
+
+    grid_original, cell_dims = divide_image_into_grid(original_gray, grid_size)
+    grid_tampered, _ = divide_image_into_grid(tampered_gray, grid_size)
+
+    tampered_map = np.zeros_like(original_image)
+    pixel_difference_count = 0
+    diff_gray = np.zeros(original_gray.shape, dtype=np.uint8)
+
+    for (pos, original_cell), (_, tampered_cell) in zip(grid_original, grid_tampered):
+        diff = cv2.absdiff(original_cell, tampered_cell)
+        non_zero_count = np.count_nonzero(diff)
+        pixel_difference_count += non_zero_count
+        diff_gray[pos[1] : pos[1] + cell_dims[1], pos[0] : pos[0] + cell_dims[0]] = (
+            np.max(diff)
+        )
+
+        if non_zero_count > 0:
+            x, y = pos
+            cv2.rectangle(
+                tampered_map,
+                (x, y),
+                (x + cell_dims[0], y + cell_dims[1]),
+                (0, 0, 255),
+                2,
+            )
+
+    tampered_output_path = os.path.join(output_dir, "tampered_highlight.jpg")
+    cv2.imwrite(tampered_output_path, tampered_map)
+
+    heatmap_output_path = os.path.join(output_dir, "heatmap.jpg")
+    generate_heatmap(diff_gray, heatmap_output_path)
+
+    comparison_output_path = os.path.join(output_dir, "comparison.jpg")
+    create_side_by_side_comparison(
+        original_image_path,
+        tampered_image_path,
+        tampered_output_path,
+        comparison_output_path,
+    )
+
+    total_pixels = (
+        original_gray.shape[0] * original_gray.shape[1]
+    )  # Ensure per-pixel calculation, not per-channel
+    tampering_percentage = (pixel_difference_count / total_pixels) * 100
+
+    return (
+        tampered_output_path,
+        heatmap_output_path,
+        comparison_output_path,
+        pixel_difference_count,
+        tampering_percentage,
+    )
+
 def main(
     original_image_path,
     tampered_image_path,
@@ -340,30 +458,27 @@ def main(
         original_image_path, tampered_image_path, run_output_dir
     )
 
+    (
+        tampered_highlight_path,
+        heatmap_path,
+        comparison_path,
+        pixel_diff_count,
+        tampering_percentage,
+    ) = highlight_tampered_areas(
+        original_image_path, tampered_image_path, run_output_dir
+    )
+
     final_summary = {
-        "original_image": {
-            "path": original_image_path,
-            "metadata": metadata_original,
-            "hashes": hashes_original,
-            "features": {
-                "histogram_summary": hist_summary_original,
-                "edge_summary": edge_summary_original,
-                "descriptors_summary": descriptors_summary_original,
-            },
-            "ela_path": ela_original,
-        },
-        "tampered_image": {
-            "path": tampered_image_path,
-            "metadata": metadata_tampered,
-            "hashes": hashes_tampered,
-            "features": {
-                "histogram_summary": hist_summary_tampered,
-                "edge_summary": edge_summary_tampered,
-                "descriptors_summary": descriptors_summary_tampered,
-            },
-            "ela_path": ela_tampered,
-        },
+        "original_image": {"path": original_image_path},
+        "tampered_image": {"path": tampered_image_path},
         "comparison_results": comparison_results,
+        "tampered_highlight": {
+            "highlighted_image_path": tampered_highlight_path,
+            "heatmap_path": heatmap_path,
+            "comparison_image_path": comparison_path,
+            "pixel_difference_count": pixel_diff_count,
+            "tampering_percentage": round(tampering_percentage, 2),
+        },
     }
 
     os.makedirs(os.path.dirname(final_output_path_json), exist_ok=True)
