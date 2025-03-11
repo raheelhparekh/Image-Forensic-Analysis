@@ -9,4 +9,4 @@ read -p "Enter the website URL: " website_url
 # Run the Python script with the provided inputs
 python3 main.py --original "$original_image_path" --tampered "$tampered_image_path" --user "$user_id" --website "$website_url"
 
-echo "✅ Analysis complete! Check the 'outputs' directory for results."
+echo " Analysis complete! Check the 'outputs' directory for results."

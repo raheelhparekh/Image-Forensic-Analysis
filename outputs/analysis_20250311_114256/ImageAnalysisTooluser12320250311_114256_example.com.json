@@ -1,0 +1,114 @@
+{
+    "original_image": {
+        "path": "images/og_new.jpeg"
+    },
+    "tampered_image": {
+        "path": "images/tamp_new.jpeg"
+    },
+    "comparison_results": {
+        "metadata_differences": {},
+        "hash_differences": {
+            "sha256": [
+                "4f2abe92c3827a339da900f32e3d1dd25fa4b8d45c8a0e5dd26262dcf7a5bb7f",
+                "75af63935b7167fe206fe08a0d59d791a0897e8099fa84f90bf53a6dbe1f5039"
+            ],
+            "phash": [
+                "90956f02977f02ed",
+                "919e6e21977e21cc"
+            ]
+        },
+        "feature_differences": {
+            "histogram": {
+                "std": [
+                    0.04352785646915436,
+                    0.0435236357152462
+                ],
+                "max": [
+                    0.4770181477069855,
+                    0.46264153718948364
+                ],
+                "mean": [
+                    0.007645301520824432,
+                    0.007669288665056229
+                ]
+            },
+            "edges": {
+                "std": [
+                    28.238131817500783,
+                    27.747788041236145
+                ],
+                "max": [
+                    730.0027397208862,
+                    729.0336069071165
+                ],
+                "mean": [
+                    20.25581931385568,
+                    20.150901603084986
+                ]
+            },
+            "descriptors": {
+                "std": [
+                    74.22933984215638,
+                    74.24214897202515
+                ],
+                "mean": [
+                    139.6083125,
+                    136.308125
+                ]
+            }
+        },
+        "ela_differences": {
+            "original_ela_path": "outputs/analysis_20250311_114256/og_new.jpeg_ela.jpg",
+            "tampered_ela_path": "outputs/analysis_20250311_114256/tamp_new.jpeg_ela.jpg"
+        },
+        "ssim": {
+            "index": 0.9785252657736063,
+            "diff_path": "outputs/analysis_20250311_114256/ssim_diff.jpg"
+        },
+        "pixel_differences": {
+            "diff_path": "outputs/analysis_20250311_114256/pixel_diff.jpg"
+        },
+        "summary": {
+            "ssim_interpretation": {
+                "description": "Structural Similarity Index (SSIM) measures how similar two images are. A value of 1 means the images are identical, while a value closer to 0 means they are very different.",
+                "value": 0.9785252657736063,
+                "interpretation": "The SSIM value of 0.98 indicates high similarity between the original and tampered images."
+            },
+            "pixel_differences_interpretation": {
+                "description": "Pixel-wise difference shows the absolute difference between the two images. Bright areas in the difference image indicate regions where the images differ significantly.",
+                "interpretation": "Check the 'pixel_diff.jpg' image to see where the original and tampered images differ. Bright areas indicate tampering or changes."
+            },
+            "ela_interpretation": {
+                "description": "Error Level Analysis (ELA) highlights areas of an image that have been compressed differently. These areas may indicate tampering.",
+                "interpretation": "Check the 'original_ela.jpg' and 'tampered_ela.jpg' images. Bright areas in the ELA images suggest regions that may have been altered."
+            },
+            "heatmap": {
+                "description": "The heatmap visually represents tampered areas. Bright red and yellow indicate heavy modifications, while blue/green indicate minimal changes."
+            },
+            "comparison_image": {
+                "description": "The comparison image places the original, tampered, and highlighted versions side by side to easily spot alterations."
+            },
+            "tampering_percentage": {
+                "description": "This value represents the percentage of the image that has been altered. A higher percentage means more modifications were detected."
+            },
+            "conclusion": {
+                "description": "Based on the analysis, the tampered image shows differences in the following areas:",
+                "differences": [
+                    "Hash differences",
+                    "Feature differences",
+                    "ELA differences",
+                    "SSIM differences",
+                    "Pixel differences"
+                ],
+                "final_verdict": "The image appears to be altered."
+            }
+        }
+    },
+    "tampered_highlight": {
+        "highlighted_image_path": "outputs/analysis_20250311_114256/tampered_highlight.jpg",
+        "heatmap_path": "outputs/analysis_20250311_114256/heatmap.jpg",
+        "comparison_image_path": "outputs/analysis_20250311_114256/comparison.jpg",
+        "pixel_difference_count": 5432385,
+        "tampering_percentage": 60.31
+    }
+}
