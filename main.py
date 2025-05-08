@@ -1,18 +1,15 @@
-import os
-import json
-import csv
-import cv2
-import numpy as np
-from PIL import Image, ImageChops
-import exifread
-import hashlib
-import imagehash
-from datetime import datetime
-from urllib.parse import urlparse
-import argparse
-from skimage.metrics import structural_similarity as ssim
+import os  #* for directory and file operations
+import json #* for JSON file operations
+import csv #* for CSV file operations
+import cv2 #* for image processing
+import numpy as np #* for numerical operations
+from PIL import Image, ImageChops #* for image manipulation
+from datetime import datetime #* for date and time operations
+from urllib.parse import urlparse #* for URL parsing
+import argparse #* for command line argument parsing
+from skimage.metrics import structural_similarity as ssim #* for image similarity
 
-
+## python3 main.py --original images/og.jpg --tampered images/tamp1.jpg --user raheel123 --website rr.com
 def create_output_directories(tool_name, user_id, website_url):
     base_output_dir = "outputs"
     os.makedirs(base_output_dir, exist_ok=True)
